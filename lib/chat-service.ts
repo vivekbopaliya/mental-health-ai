@@ -1,5 +1,5 @@
 import { ChatOpenAI, OpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage, AIMessage } from "langchain/schema";
+import { HumanMessage, SystemMessage, AIMessage } from "@langchain/core/messages";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -21,8 +21,8 @@ export class ChatService {
   
   constructor() {
     this.model = new ChatOpenAI({
-      model: "gpt-4-turbo-preview",
-      apiKey: process.env.OPENAI_API_KEY,
+      model: "gpt-4-turbo",
+      apiKey: "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",
       temperature: 0.7,
     });
   }
@@ -60,7 +60,7 @@ export class ChatService {
       // Get conversation summary
       const summary = await this.getConversationSummary(userId);
 
-      // Save user message to database
+      // // Save user message to database
       await prisma.chatMessage.create({
         data: {
           content,
@@ -72,7 +72,7 @@ export class ChatService {
       // Generate AI response
       const response = await this.model.invoke([
         new SystemMessage({
-          content: SYSTEM_TEMPLATE.replace("{summary}", summary),
+          content: SYSTEM_TEMPLATE,
         }),
         new HumanMessage({ content }),
       ]);
@@ -80,7 +80,7 @@ export class ChatService {
       // Save AI response to database
       await prisma.chatMessage.create({
         data: {
-          content: response.content,
+          content: response.content as string,
           role: 'assistant',
           userId,
         },

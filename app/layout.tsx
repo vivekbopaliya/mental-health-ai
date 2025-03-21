@@ -4,7 +4,6 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/components/query-provider';
-import ChatbotPopup from '@/components/ChatbotPopup';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +28,6 @@ export default function RootLayout({
         >
           <QueryProvider>
             {children}
-            <ChatbotPopup />
             <Toaster />
           </QueryProvider>
         </ThemeProvider>

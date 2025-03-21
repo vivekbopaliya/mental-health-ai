@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Brain, Heart, Sparkles, Sun, Moon, Star, Cloud } from "lucide-react"
+import { Brain, Heart, Sparkles, Sun, Moon, Star, Cloud, MessageCircle } from "lucide-react"
 
 export function WelcomeHero({ userMood = 7 }) {
   const [theme, setTheme] = useState({
@@ -266,7 +266,6 @@ export function WelcomeHero({ userMood = 7 }) {
                     className="fixed bottom-24 right-8 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium p-4 rounded-full shadow-lg z-50 flex items-center gap-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsTalkingWithAI(true)}
                   >
                     <MessageCircle className="w-5 h-5" />
                     <span>Talk with AI</span>

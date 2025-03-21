@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
+    "@langchain/community": "^0.3.36",
+    "@langchain/core": "^0.3.42",
     "@langchain/google-genai": "^0.0.2",
-    "langchain": "0.0.207",
+    "@langchain/openai": "^0.4.5",
     "@next/swc-wasm-nodejs": "13.5.1",
     "@prisma/client": "^5.11.0",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -48,6 +50,9 @@
     "@types/react-dom": "18.2.7",
     "ai": "^3.0.12",
     "autoprefixer": "10.4.15",
+    "axios": "^1.8.4",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -57,6 +62,9 @@
     "eslint-config-next": "13.5.1",
     "framer-motion": "^11.0.14",
     "input-otp": "^1.2.4",
+    "jose": "^6.0.10",
+    "jwt-simple": "^0.5.6",
+    "langchain": "^0.0.207",
     "lucide-react": "^0.446.0",
     "mongodb": "^6.5.0",
     "next": "13.5.1",
@@ -76,9 +84,6 @@
     "typescript": "5.2.2",
     "vaul": "^0.9.9",
     "zod": "^3.23.8"
-  },
-  "overrides": {
-    "@langchain/core": "0.1.5"
   },
   "devDependencies": {
     "prisma": "^5.11.0"

@@ -171,55 +171,7 @@ export default function Home() {
         )}
       </AnimatePresence>
       
-      {/* AI Chat Overlay */}
-      <AnimatePresence>
-        {isTalkingWithAI && (
-          <motion.div 
-            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div 
-              className="bg-white rounded-lg w-full max-w-xl h-[70vh] relative overflow-hidden"
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
-              transition={{ type: "spring", damping: 25 }}
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex justify-between items-center p-4 border-b">
-                  <h2 className="font-bold text-lg">AI Wellness Assistant</h2>
-                  <button onClick={handleClose}>
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                
-                <div className="flex-1 overflow-auto p-4">
-                  <div className="bg-blue-100 p-3 rounded-lg rounded-tl-none max-w-[80%] mb-4">
-                    <p>Hi there! I'm your wellness assistant. How are you feeling today?</p>
-                  </div>
-                </div>
-                
-                <div className="p-4 border-t">
-                  <div className="flex gap-2">
-                    <input 
-                      type="text" 
-                      className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Type your message..."
-                    />
-                    <button className="bg-blue-500 text-white rounded-full p-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+     
     </main>
   );
 }
