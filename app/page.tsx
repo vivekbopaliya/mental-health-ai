@@ -1,4 +1,3 @@
-"use client"
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,7 +5,6 @@ import { MoodTracker } from '@/components/MoodTracker';
 import { WelcomeHero } from '@/components/WelcomeHero';
 import { MessageCircle, BarChart2, BookOpen, X } from "lucide-react";
 
-// Placeholder components that you'll need to create
 const DashboardStats = () => (
   <motion.div
     initial={{ opacity: 0 }}

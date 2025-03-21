@@ -11,6 +11,7 @@ model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   name      String?
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -18,12 +19,6 @@ model User {
   moods         Mood[]
   // Chat history
   chatMessages  ChatMessage[]
-  // Preferences
-  preferences   Preferences?
-  // Reminders
-  reminders     Reminder[]
-  // Sleep tracking
-  sleepRecords  SleepRecord[]
 }
 
 model Mood {
@@ -45,31 +40,4 @@ model ChatMessage {
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model Preferences {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  theme             String  @default("light")
-  checkInFrequency  String  @default("daily")
-  notificationsEnabled Boolean @default(true)
-  userId            String  @unique @db.ObjectId
-  user              User    @relation(fields: [userId], references: [id])
-}
 
-model Reminder {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String?
-  datetime    DateTime
-  completed   Boolean  @default(false)
-  userId      String   @db.ObjectId
-  user        User     @relation(fields: [userId], references: [id])
-}
-
-model SleepRecord {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  startTime   DateTime
-  endTime     DateTime
-  quality     Int      // Scale of 1-5
-  notes       String?
-  userId      String   @db.ObjectId
-  user        User     @relation(fields: [userId], references: [id])
-}

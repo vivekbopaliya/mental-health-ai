@@ -11,6 +11,7 @@ import { ChatService } from '@/lib/chat-service'
 import { useToast } from '@/components/ui/use-toast'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { useUserData } from '@/hooks/getUserData'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -19,9 +20,11 @@ interface Message {
 }
 
 const chatService = new ChatService()
-const TEMP_USER_ID = 'temp-user-id'
 
 export default function MentalHealthChat() {
+  const {data} = useUserData();
+  const USER_ID = data
+
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -85,7 +88,8 @@ export default function MentalHealthChat() {
     const loadHistory = async () => {
       try {
         setIsLoading(true)
-        const history = await chatService.loadChatHistory(TEMP_USER_ID)
+        const history = await chatService.loadChatHistory(USER_ID)
+        console.log("history", history)
         if (history.length > 0) {
           setMessages(history)
         } else {
@@ -130,7 +134,7 @@ export default function MentalHealthChat() {
     try {
       const newUserMessage: Message = { role: 'user', content: userMessage, timestamp: new Date() }
       setMessages(prev => [...prev, newUserMessage])
-      const response = await chatService.sendMessage(TEMP_USER_ID, userMessage)
+      const response = await chatService.sendMessage(USER_ID, userMessage)
       console.log(response)
       const newAIMessage: Message = { role: 'assistant', content: response, timestamp: new Date() }
       setMessages(prev => [...prev, newAIMessage])

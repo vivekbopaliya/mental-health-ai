@@ -1,50 +1,68 @@
-import { db } from "@/lib/db";
-import { UserValidation } from "@/lib/validators/user.validator";
-import { ZodError } from "zod";
-import bcrypt from 'bcryptjs';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { z } from "zod";
+import bcrypt from "bcryptjs";
 
-export  async function POST(req:Request) {
-    try {
-        const body = await req.json()
-        
+const prisma = new PrismaClient();
 
-        const {name, email, password} = UserValidation.parse(body);
+// Zod schema for validation
+const UserValidation = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
-        // If email is alredy registerd
-        const alreadyExists = await db.user.findFirst({
-            where: {
-                email: email
-            }
-        })
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { name, email, password } = UserValidation.parse(body);
 
-        if(alreadyExists) {
-            return new Response('Email is already registered, directly login.', {status: 403})
-        }
-
-        // Hash passeword
-        const hashedPassword = await bcrypt.hash(password, 10)
-
-        if(!hashedPassword) {
-            return new Response('Password could not be hashed.', {status: 500})
-        }
-
-        // Create user
-        const createUser = await db.user.create({
-            data: {
-                 name, email, password:hashedPassword as string
-            }
-        })
-
-        if(!createUser) {
-            return new Response('User could not be created, try again.', {status: 500})
-        }
-
-        return new Response('User has been created successfully.', {status: 200})
-    } catch (error:any) {
-        if(error instanceof ZodError) {
-            return new Response('Please provid valid data.', {status: 400})
-        }
-        console.error('Error siging up: ', error);
-        return new Response('Internal server error.', {status: 500})
+    // Check if email already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "Email is already registered, please log in." },
+        { status: 403 }
+      );
     }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    if (!hashedPassword) {
+      return NextResponse.json(
+        { error: "Password could not be hashed." },
+        { status: 500 }
+      );
+    }
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    return NextResponse.json(
+      { message: "User has been created successfully.", user },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Please provide valid data.", details: error.errors },
+        { status: 400 }
+      );
+    }
+    console.error("Error signing up:", error);
+    return NextResponse.json(
+      { error: "Internal server error." },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
 }

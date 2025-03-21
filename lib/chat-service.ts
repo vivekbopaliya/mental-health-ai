@@ -22,7 +22,7 @@ export class ChatService {
   constructor() {
     this.model = new ChatOpenAI({
       model: "gpt-4-turbo",
-      apiKey: "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",
+      apiKey: process.env.OPENAI_API_KEY,
       temperature: 0.7,
     });
   }
@@ -60,7 +60,7 @@ export class ChatService {
       // Get conversation summary
       const summary = await this.getConversationSummary(userId);
 
-      // // Save user message to database
+      // // // Save user message to database
       await prisma.chatMessage.create({
         data: {
           content,
@@ -72,11 +72,12 @@ export class ChatService {
       // Generate AI response
       const response = await this.model.invoke([
         new SystemMessage({
-          content: SYSTEM_TEMPLATE,
+          content: SYSTEM_TEMPLATE.replace("{summary}", summary),
         }),
         new HumanMessage({ content }),
       ]);
 
+      console.log("AI response:", response);
       // Save AI response to database
       await prisma.chatMessage.create({
         data: {
