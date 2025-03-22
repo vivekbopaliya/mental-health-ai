@@ -1,68 +1,11 @@
-
+'use client'
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoodTracker } from '@/components/MoodTracker';
 import { WelcomeHero } from '@/components/WelcomeHero';
 import { MessageCircle, BarChart2, BookOpen, X } from "lucide-react";
+import { DashboardStats, RecommendationsCard } from "@/components/HomeCards";
 
-const DashboardStats = () => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="bg-gradient-to-br from-blue-50 to-purple-100 p-6 rounded-lg shadow-lg h-full"
-  >
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-2xl font-bold">Your Stats</h2>
-      <BarChart2 className="w-6 h-6 text-blue-500" />
-    </div>
-    <div className="space-y-4">
-      <div className="bg-white/80 p-4 rounded-lg">
-        <h3 className="font-medium mb-2">Weekly Mood Average</h3>
-        <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-blue-500">7.2</span>
-          <span className="text-green-500 text-sm">↑ 0.5</span>
-        </div>
-      </div>
-      <div className="bg-white/80 p-4 rounded-lg">
-        <h3 className="font-medium mb-2">Most Common Activity</h3>
-        <p className="font-medium">Exercise (4 days)</p>
-      </div>
-      <div className="bg-white/80 p-4 rounded-lg">
-        <h3 className="font-medium mb-2">Streak</h3>
-        <p className="font-medium">5 days 🔥</p>
-      </div>
-    </div>
-  </motion.div>
-);
-
-const RecommendationsCard = () => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="bg-gradient-to-br from-yellow-50 to-amber-100 p-6 rounded-lg shadow-lg h-full"
-  >
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-2xl font-bold">Recommendations</h2>
-      <BookOpen className="w-6 h-6 text-amber-500" />
-    </div>
-    <div className="space-y-4">
-      <div className="bg-white/80 p-4 rounded-lg">
-        <h3 className="font-medium mb-2">Mindfulness</h3>
-        <p className="text-sm">Try this 5-minute breathing exercise to center yourself.</p>
-      </div>
-      <div className="bg-white/80 p-4 rounded-lg">
-        <h3 className="font-medium mb-2">Self-Care</h3>
-        <p className="text-sm">Going for a walk in nature can improve your mood.</p>
-      </div>
-      <div className="bg-white/80 p-4 rounded-lg">
-        <h3 className="font-medium mb-2">Reading</h3>
-        <p className="text-sm">"The Happiness Trap" - Learn to manage difficult emotions.</p>
-      </div>
-    </div>
-  </motion.div>
-);
 
 export default function Home() {
   const [activeCard, setActiveCard] = useState(null);
