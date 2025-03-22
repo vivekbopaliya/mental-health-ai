@@ -1,29 +1,17 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { format, startOfDay, startOfWeek, startOfMonth, subDays } from 'date-fns'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/use-toast'
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts'
 import {
   Smile,
   Meh,
   Frown,
-  Calendar,
   Activity,
   Music,
   Coffee,
@@ -35,6 +23,7 @@ import {
   Cloud,
   CloudLightning,
 } from 'lucide-react'
+import { saveMoodEntry } from '@/lib/utils'
 
 const activities = [
   { icon: Activity, label: 'Exercise' },
@@ -44,30 +33,6 @@ const activities = [
   { icon: Users, label: 'Socializing' },
   { icon: Home, label: 'Home' },
 ]
-
-interface MoodEntry {
-  id: string
-  rating: number
-  note: string
-  activities: string[]
-  createdAt: Date
-}
-
-async function getMoodEntries(period: 'day' | 'week' | 'month') {
-  const response = await fetch(`/api/moods?period=${period}`)
-  if (!response.ok) throw new Error('Failed to fetch mood entries')
-  return response.json()
-}
-
-async function createMoodEntry(data: Omit<MoodEntry, 'id' | 'createdAt'>) {
-  const response = await fetch('/api/moods', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  })
-  if (!response.ok) throw new Error('Failed to create mood entry')
-  return response.json()
-}
 
 // Theme configurations based on mood
 const moodThemes = {
@@ -105,38 +70,10 @@ export function MoodTracker() {
   const [selectedActivities, setSelectedActivities] = useState<string[]>([])
   const [moodRating, setMoodRating] = useState(5)
   const [note, setNote] = useState('')
-  const [period, setPeriod] = useState<'day' | 'week' | 'month'>('day')
   const [theme, setTheme] = useState(moodThemes.medium)
   const { toast } = useToast()
   const queryClient = useQueryClient()
-
-  const { data: moodData, isLoading } = useQuery({
-    queryKey: ['moods', period],
-    queryFn: () => getMoodEntries(period),
-  })
-
-  const createMoodMutation = useMutation({
-    mutationFn: createMoodEntry,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['moods'] })
-      toast({
-        title: "Mood tracked!",
-        description: "Your mood has been recorded successfully.",
-      })
-      // Reset form
-      setMoodRating(5)
-      setNote('')
-      setSelectedActivities([])
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to record your mood. Please try again.",
-        variant: "destructive",
-      })
-    },
-  })
-
+  
   // Update theme based on mood rating
   useEffect(() => {
     if (moodRating >= 8) {
@@ -156,12 +93,33 @@ export function MoodTracker() {
     return <Smile className="w-8 h-8 text-yellow-500" />
   }
 
+  // Function to handle adding a new mood entry
   const handleSubmit = () => {
-    createMoodMutation.mutate({
-      rating: moodRating,
-      note,
+    // Create the mood entry object
+    const newEntry = {
+      date: new Date().toISOString(),
+      score: moodRating,
       activities: selectedActivities,
+      notes: note
+    }
+    
+    // Save the entry using the utility function
+    saveMoodEntry(newEntry)
+    
+    // Show success toast
+    toast({
+      title: "Mood tracked!",
+      description: "Your mood has been recorded successfully.",
     })
+    
+    // Reset form
+    setMoodRating(5)
+    setNote('')
+    setSelectedActivities([])
+    
+    // Refresh the data to update all related components
+    queryClient.invalidateQueries({ queryKey: ['moods'] })
+    queryClient.invalidateQueries({ queryKey: ['mentalHealthData'] })
   }
 
   const toggleActivity = (activity: string) => {
@@ -196,8 +154,6 @@ export function MoodTracker() {
           </motion.h2>
         </div>
 
-    
-
         <AnimatePresence>
           <motion.div
             initial={{ opacity: 0 }}
@@ -205,7 +161,7 @@ export function MoodTracker() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
             key={`mood-message-${moodRating}`}
-            className="mb-6 p-4 mt-16 rounded-lg bg-white/80 shadow-sm"
+            className="mb-6 p-4 mt-4 rounded-lg bg-white/80 shadow-sm"
           >
             <div className="flex items-center gap-3">
               <ThemeIcon className="w-6 h-6" />
@@ -301,9 +257,8 @@ export function MoodTracker() {
             <Button
               className={`w-full bg-gradient-to-r ${theme.primaryColor} text-white`}
               onClick={handleSubmit}
-              disabled={createMoodMutation.isPending}
             >
-              {createMoodMutation.isPending ? "Recording..." : "Record Mood"}
+              Record Mood
             </Button>
           </motion.div>
         </div>

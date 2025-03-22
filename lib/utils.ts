@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-interface MoodEntry {
+export interface MoodEntry {
   date: string;
   score: number;
   activities: string[];
@@ -45,13 +45,14 @@ class MentalHealthAIService {
   constructor() {
     this.model = new ChatOpenAI({
       model: "gpt-4-turbo",
-      apiKey: "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", // Use environment variable with NEXT_PUBLIC_ prefix for client-side
+      apiKey: process.env.OPENAI_API_KEY,
       temperature: 0.7,
     });
   }
 
   private getChatMessages(): ChatMessage[] {
-    const storedMessages = localStorage.getItem('chat_history');
+    const storedMessages = localStorage.getItem(`chat_history`);
+    console.log(storedMessages); // Debugging
     return storedMessages ? JSON.parse(storedMessages) : [];
   }
 
@@ -251,7 +252,7 @@ export function useMentalHealthData() {
         
         const calculatedStats = calculateUserStats(moodEntries);
         const aiRecommendations = await aiService.generateAIRecommendations(calculatedStats, moodEntries);
-        
+      
         setStats(calculatedStats);
         setRecommendations(aiRecommendations);
       } catch (error) {
@@ -272,7 +273,6 @@ export function saveMoodEntry(entry: MoodEntry) {
   entries.push(entry);
   localStorage.setItem('moodEntries', JSON.stringify(entries));
 }
-
 export function saveChatMessage(message: ChatMessage) {
   const messages = JSON.parse(localStorage.getItem('chat_history') || '[]');
   messages.push(message);

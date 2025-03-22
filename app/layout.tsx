@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { QueryProvider } from '@/components/query-provider';
+// import { ProactiveCheckIn } from '@/components/ProactiveCheckIns';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <QueryProvider>
             {children}
             <Toaster />
+            {/* <ProactiveCheckIn /> */}
           </QueryProvider>
         </ThemeProvider>
       </body>

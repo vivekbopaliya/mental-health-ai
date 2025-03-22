@@ -5,6 +5,8 @@ import { MoodTracker } from '@/components/MoodTracker';
 import { WelcomeHero } from '@/components/WelcomeHero';
 import { MessageCircle, BarChart2, BookOpen, X } from "lucide-react";
 import { DashboardStats, RecommendationsCard } from "@/components/HomeCards";
+import { MoodStatsOverview } from "@/components/MoodStateOverview";
+import { AIRecommendations } from "@/components/AiRecommendation";
 
 
 export default function Home() {
@@ -104,8 +106,8 @@ export default function Home() {
               
               <div className="p-6">
                 {activeCard === 'mood' && <MoodTracker />}
-                {activeCard === 'stats' && <DashboardStats />}
-                {activeCard === 'recommendations' && <RecommendationsCard />}
+                {activeCard === 'stats' && <MoodStatsOverview />}
+                {activeCard === 'recommendations' && <AIRecommendations />}
               </div>
             </motion.div>
           </motion.div>
