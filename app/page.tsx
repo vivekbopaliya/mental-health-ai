@@ -8,15 +8,15 @@ import { DashboardStats, RecommendationsCard } from "@/components/HomeCards";
 
 
 export default function Home() {
-  const [activeCard, setActiveCard] = useState(null);
+  const [activeCard, setActiveCard] = useState("");
   const [isTalkingWithAI, setIsTalkingWithAI] = useState(false);
 
-  const handleCardClick = (cardType) => {
-    setActiveCard(cardType);
+  const handleCardClick = (cardType : unknown) => {
+    setActiveCard(cardType as unknown as string);
   };
 
   const handleClose = () => {
-    setActiveCard(null);
+    setActiveCard("");
     setIsTalkingWithAI(false);
   };
 

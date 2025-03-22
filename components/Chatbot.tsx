@@ -91,7 +91,7 @@ export default function MentalHealthChat() {
         const history = await chatService.loadChatHistory(USER_ID)
         console.log("history", history)
         if (history.length > 0) {
-          setMessages(history)
+          setMessages(history as Message[])
         } else {
           setMessages([{
             role: 'assistant',
@@ -286,11 +286,11 @@ export default function MentalHealthChat() {
               <TooltipContent className="max-w-sm p-4">
                 <div className="space-y-2">
                   <h3 className="font-semibold text-sm">Crisis Resources</h3>
-                  <p className="text-xs">If you're in crisis, please contact:</p>
+                  <p className="text-xs">If youre in crisis, please contact:</p>
                   <ul className="text-xs space-y-1">
                     <li>988 Suicide & Crisis Lifeline: Call or text 988</li>
                     <li>Crisis Text Line: Text HOME to 741741</li>
-                    <li>If it's an emergency, call 911</li>
+                    <li>If its an emergency, call 911</li>
                   </ul>
                 </div>
               </TooltipContent>
